@@ -12,12 +12,17 @@ const sequelize = new Sequelize('hotel', 'root', '', {
 
 // Define a model
 const User = sequelize.define('User', {
-    name: Sequelize.STRING,
+    nome: Sequelize.STRING,
     email: Sequelize.STRING,
+    senha: Sequelize.STRING,
+    token: Sequelize.STRING,
+    cpf: Sequelize.STRING,
+    dataNascimento: Sequelize.DATE
 });
 
+sequelize.sync({ alter: true });
 // Sync the model with the database
-sequelize.sync();
+
 
 // Middleware
 app.use(express.json());
@@ -40,10 +45,38 @@ app.get('/users/:userId', async (req, res) => {
 });
 
 app.post('/users', async (req, res) => {
-    const { name, email } = req.body;
-    const user = await User.create({ name, email });
+    const { nome, email, senha, token, cpf, dataNascimento } = req.body;
+    const user = await User.create({ nome, email, senha, token, cpf, dataNascimento });
     res.json(user);
 });
+
+// PUT endpoint
+app.put('/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const updatedUser = req.body;
+
+    const result = await User.update(updatedUser, {
+        where: {
+            id: userId
+        }
+    });
+
+    res.json({ message: 'Os dados foram atualizados com sucesso!', affectedRows: result[0] });
+});
+
+// DELETE endpoint
+app.delete('/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
+
+    const result = await User.destroy({
+        where: {
+            id: userId
+        }
+    });
+
+    res.json({ message: 'O cadastro do cliente foi excluído com sucesso!.', affectedRows: result });
+});
+
 
 // Protection middleware
 app.use((req, res, next) => {
