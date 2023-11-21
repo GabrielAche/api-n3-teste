@@ -4,86 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Hotel Bind.it</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: rgb(81, 62, 225);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
 
-        .cabecalho {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        input,
-        button {
-            margin-bottom: 10px;
-            width: 100%;
-            padding: 10px;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
 
-    <div class="cabecalho">
-        <img src="./imagens/WhatsApp Image 2023-11-21 at 00.07.52.jpeg ">
-        <h2>Hotel Bind.it</h2>
-    </div>
+    <main class="card">
+        <div class="title">
+            <h2>Hotel Bind.it</h2>
+        </div>
+        <div class="content-wrapper">
+            <form id="userForm">
+                <label for="name">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
 
-    <form id="userForm">
-        <label for="name">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required>
 
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" required>
 
-        <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" name="cpf" required>
+                <label for="dataNascimento">Data de Nascimento:</label>
+                <input type="date" id="dataNascimento" name="dataNascimento" required>
 
-        <label for="dataNascimento">Data de Nascimento:</label>
-        <input type="date" id="dataNascimento" name="dataNascimento" required>
+                <button type="submit" onclick="createUser()">Cadastrar</button>
 
-        <button type="button" onclick="createUser()">Cadastrar</button>
-    </form>
 
-    <div class="button"> <!-- box do botão Start -->
-        <button>
-            <a href="./home.html" target="_blank">
-                Lista de hospedagens
-            </a>
-        </button>
-    </div>
 
-    <h2>Lista de Usuários</h2>
-    <ul id="userList"></ul>
+            </form>
+
+            <div class="button"> <!-- box do botão Start -->
+                <button class="lista-hospedagens">
+                    <a href="./home.html" target="_blank">
+                        Lista de hospedagens
+                    </a>
+                </button>
+            </div>
+        </div>
+        
+        <div class="usersList">
+            <h2>Lista de Usuários</h2>
+            <ul id="userList"></ul>
+        </div>
+    </main>
+
 
     <script>
         async function createUser() {
@@ -93,7 +62,7 @@
             const cpf = document.getElementById('cpf').value;
             const dataNascimento = document.getElementById('dataNascimento').value;
 
-            const response = await fetch('/users', {
+            const response = await fetch('http://localhost:3000/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

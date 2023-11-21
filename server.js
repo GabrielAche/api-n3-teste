@@ -1,13 +1,14 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const cors = require('cors');
 
 const app = express();
 
 // Connect to MySQL database from the server
-const sequelize = new Sequelize('hotel', 'root', '', {
+const sequelize = new Sequelize('hotel', 'root', 'admin', {
     dialect: 'mysql',
     host: '127.0.0.1',
-    port: '3307',
+    port: '3306',
 });
 
 // Define a model
@@ -25,6 +26,7 @@ sequelize.sync({ alter: true });
 
 
 // Middleware
+app.use(cors())
 app.use(express.json());
 
 // Endpoints
