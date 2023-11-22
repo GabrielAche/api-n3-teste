@@ -16,12 +16,6 @@ body {
     min-height: 100vh
 }
 
-.cabecalho {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .title h2{
     margin-bottom: 40px;
     color: white;
@@ -61,23 +55,7 @@ button {
     transition: transform 200ms ease-in-out;
 }
 
-.button {
-    display: flex;
-    justify-content: flex-start;
-}
-
-
-.lista-hospedagens {
-    background-color: #4CAF50;
-    color: white !important;
-    text-shadow: 1px 0px 4px black, -3px -1px 0px black;
-    cursor: pointer;
-    padding: 15px;
-    border-radius: 10px;
-    border: solid black;
-}
-
-.lista-hospedagens a {
+.button a {
     text-decoration: none;
     color: white; /* Cor desejada para o texto do link */
 }
@@ -97,16 +75,6 @@ main{
     margin: auto;
     padding: 60px;
     box-shadow: -8px 14px 12px 1px black;
-}
-
-div.usersList{
-    margin-top: 40px;
-}
-
-.usersList h2{
-    font-size: 15px;
-    color: white;
-    text-shadow: 1px 0px 4px black, -3px -1px 0px black;
 }
 
 @media screen and (max-width: 737px) {

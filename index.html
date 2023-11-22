@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/styleCadastro.css">
     <title>Hotel Bind.it</title>
-
 </head>
 
 <body>
@@ -32,36 +31,40 @@
                 <label for="dataNascimento">Data de Nascimento:</label>
                 <input type="date" id="dataNascimento" name="dataNascimento" required>
 
-                <button type="submit" onclick="createUser()">Cadastrar</button>
-
-
-
+                <button class="button" type="button" onclick="return validateAndCreateUser()">
+                    Cadastrar
+                </button>
             </form>
-
-            <div class="button"> <!-- box do botão Start -->
+            <!-- <div class="button"> 
                 <button class="lista-hospedagens">
                     <a href="./home.html" target="_blank">
                         Lista de hospedagens
                     </a>
                 </button>
-            </div>
+            </div> -->
         </div>
-        
-        <div class="usersList">
-            <h2>Lista de Usuários</h2>
-            <ul id="userList"></ul>
-        </div>
+
     </main>
 
-
     <script>
-        async function createUser() {
+
+        async function validateAndCreateUser() {
+            console.log('Início da função validateAndCreateUser()');
+
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
             const senha = document.getElementById('senha').value;
             const cpf = document.getElementById('cpf').value;
             const dataNascimento = document.getElementById('dataNascimento').value;
 
+            // Validar se os campos estão preenchidos
+            if (!nome || !email || !senha || !cpf || !dataNascimento) {
+                alert('Por favor, preencha todos os campos antes de prosseguir.');
+                console.log('Campos não preenchidos, interrompendo...');
+                return false;  // Impede o envio do formulário
+            }
+
+            // Criar o usuário
             const response = await fetch('http://localhost:3000/users', {
                 method: 'POST',
                 headers: {
@@ -72,30 +75,20 @@
             });
 
             const result = await response.json();
-            alert(result.message);
-            getUserList();
+            if (result.message) {
+                alert(result.message);
+            }
+
+
+            // Log para verificar se a linha abaixo é executada
+            console.log('Redirecionando para ./login.html');
+            // Redirecionar para a próxima tela (login.html)
+            window.location.href = './login.html';
+
+            return false;  // Impede o envio do formulário
         }
 
-        async function getUserList() {
-            const response = await fetch('/users', {
-                headers: {
-                    'Authorization': 'secret-token'
-                }
-            });
 
-            const userList = await response.json();
-            const userListElement = document.getElementById('userList');
-            userListElement.innerHTML = '';
-
-            userList.forEach(user => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `Nome: ${user.nome}, Email: ${user.email}, CPF: ${user.cpf}, Date of Birth: ${user.dataNascimento}`;
-                userListElement.appendChild(listItem);
-            });
-        }
-
-        // Initial load of user list
-        getUserList();
     </script>
 
 </body>

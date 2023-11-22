@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Press+Start+2P&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive; /* */
+}
+
+body {
+    background-repeat: no-repeat;
+    background-image: linear-gradient( 45deg, rgb(20, 20, 20), #1f165f);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh
+}
+
+.cabecalho {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title h2{
+    margin-bottom: 40px;
+    color: white;
+    font-size: 30px;
+    text-shadow: -1px -1px 0px black, -4px -4px 0px black;
+}
+
+form {
+    max-width: 800px;
+    color: white;
+    text-shadow: -4px 0px 4px black, -4px 0px 0px black;
+}
+
+input{
+    margin-bottom: 22px;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+input:focus {
+    outline: 2.5px solid black;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white !important;
+    text-shadow: 1px 0px 4px black, -3px -1px 0px black;
+    cursor: pointer;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: solid black;
+    transition: transform 200ms ease-in-out;
+}
+
+.button a {
+    text-decoration: none;
+    color: white; /* Cor desejada para o texto do link */
+}
+
+button:hover{
+    transform: scale(1.05); /* espaço do botão na tela */
+}
+
+main{
+    border: solid black;
+    width: 70%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2b2177;
+    margin: auto;
+    padding: 60px;
+    box-shadow: -8px 14px 12px 1px black;
+}

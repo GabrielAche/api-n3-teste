@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Press+Start+2P&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive; /* */
+}
+
+body {
+    background-repeat: no-repeat;
+    background-image: linear-gradient( 45deg, rgb(20, 20, 20), #1f165f);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh
+}
+
+.title h2{
+    margin-bottom: 40px;
+    color: white;
+    font-size: 30px;
+    text-shadow: -1px -1px 0px black, -4px -4px 0px black;
+}
+
+main{
+    border: solid black;
+    width: 75%;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2b2177;
+    margin: auto;
+    padding: 60px;
+    box-shadow: -8px 14px 12px 1px black;
+}
+
+img{
+    width: 400px;
+    height: 300px;
+    border-radius: 15px;
+    border: solid black 3px;
+    box-shadow: black -2px 1px 16px 1px;
+}
+
+.container_1{
+    display: flex;
+}
+
+.container_2{
+    display: flex;
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+}
+
+button{
+    padding: 5px;
+    margin: 15px;
+    background-color: #4CAF50;
+    text-shadow: 1px 0px 4px black, -3px -1px 0px black;
+    cursor: pointer;
+    width: 100%;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    transition: transform 200ms ease-in-out;
+}
+
+button:hover{
+    transform: scale(1.05); /* espaço do botão na tela */
+}
+
+label{
+    color: white;
+    margin: 6px;
+    text-shadow: 1px 0px 4px black, -3px -1px 0px black;
+}
+
+::-webkit-scrollbar{ /* scroll da tela*/
+    width: 10px;
+    background-color: #1f165f;
+}
+
+::-webkit-scrollbar-thumb{ /* barra do scroll da tela*/
+    background-color: #100d2d;
+}
