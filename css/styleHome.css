@@ -34,6 +34,7 @@ main{
     margin: auto;
     padding: 60px;
     box-shadow: -8px 14px 12px 1px black;
+    margin: 50px;
 }
 
 img{
@@ -78,7 +79,7 @@ button:hover{
 
 label{
     color: white;
-    margin: 6px;
+    margin: 10px;
     text-shadow: 1px 0px 4px black, -3px -1px 0px black;
 }
 
