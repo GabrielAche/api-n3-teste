@@ -21,9 +21,14 @@ const User = sequelize.define('User', {
     dataNascimento: Sequelize.DATE
 });
 
-sequelize.sync({ alter: true });
-// Sync the model with the database
+const Reserva = sequelize.define('Reserva', {
+    apartamento: Sequelize.STRING,
+    numHospedes: Sequelize.INTEGER,
+    dataEntrada: Sequelize.DATE,
+    dataSaida: Sequelize.DATE
+});
 
+sequelize.sync({ alter: true });
 
 // Middleware
 app.use(cors())
@@ -46,11 +51,31 @@ app.get('/users/:userId', async (req, res) => {
     res.json(user)
 });
 
+app.get('/reservas', async (req, res) => {
+    const reservas = await Reserva.findAll();
+    res.json(reservas);
+});
+
 app.post('/users', async (req, res) => {
     const { nome, email, senha, token, cpf, dataNascimento } = req.body;
     const user = await User.create({ nome, email, senha, token, cpf, dataNascimento });
     res.json(user);
 });
+
+app.post('/reservas', async (req, res) => {
+    const { apartamento, numHospedes, dataEntrada, dataSaida } = req.body;
+
+    // Valide os campos, se necessário
+    if (!apartamento || !numHospedes || !dataEntrada || !dataSaida) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    }
+
+    // Crie a reserva
+    const reserva = await Reserva.create({ apartamento, numHospedes, dataEntrada, dataSaida });
+
+    res.status(201).json({ message: 'Reserva criada com sucesso!', reserva });
+});
+
 
 // PUT endpoint
 app.put('/users/:userId', async (req, res) => {
@@ -66,6 +91,35 @@ app.put('/users/:userId', async (req, res) => {
     res.json({ message: 'Os dados foram atualizados com sucesso!', affectedRows: result[0] });
 });
 
+// PUT endpoint para atualizar uma reserva específica
+app.put('/reservas/:reservaId', async (req, res) => {
+    const reservaId = req.params.reservaId;
+    const updatedReserva = req.body;
+
+    try {
+        // Tenta encontrar a reserva pelo ID
+        const reserva = await Reserva.findByPk(reservaId);
+
+        // Se a reserva não for encontrada, retorne um erro 404
+        if (!reserva) {
+            return res.status(404).json({ message: 'Reserva não encontrada.' });
+        }
+
+        // Atualiza os dados da reserva
+        await Reserva.update(updatedReserva, {
+            where: {
+                id: reservaId
+            }
+        });
+
+        res.json({ message: 'Os dados da reserva foram atualizados com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao atualizar a reserva:', error);
+        res.status(500).json({ message: 'Erro interno ao atualizar a reserva.' });
+    }
+});
+
+
 // DELETE endpoint
 app.delete('/users/:userId', async (req, res) => {
     const userId = req.params.userId;
@@ -77,6 +131,32 @@ app.delete('/users/:userId', async (req, res) => {
     });
 
     res.json({ message: 'O cadastro do cliente foi excluído com sucesso!.', affectedRows: result });
+});
+
+app.delete('/reservas/:reservaId', async (req, res) => {
+    const reservaId = req.params.reservaId;
+
+    try {
+        // Tenta encontrar a reserva pelo ID
+        const reserva = await Reserva.findByPk(reservaId);
+
+        // Se a reserva não for encontrada, retorne um erro 404
+        if (!reserva) {
+            return res.status(404).json({ message: 'Reserva não encontrada.' });
+        }
+
+        // Exclui a reserva
+        await Reserva.destroy({
+            where: {
+                id: reservaId
+            }
+        });
+
+        res.json({ message: 'A reserva foi excluída com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao excluir a reserva:', error);
+        res.status(500).json({ message: 'Erro interno ao excluir a reserva.' });
+    }
 });
 
 

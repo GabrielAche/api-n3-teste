@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva</title>
+    <link rel="stylesheet" href="../css/styleReserva.css">
+</head>
+
+<body>
+    <main class="card">
+        <div class="title">
+            <h2>Reservar Apartamento</h2>
+        </div>
+
+        <form id="reservaForm">
+            <label for="apartamento">Apartamento:</label>
+            <input type="text" id="apartamento" name="apartamento" readonly>
+
+            <label for="numHospedes">Número de Hóspedes:</label>
+            <input type="number" id="numHospedes" name="numHospedes" required>
+
+            <label for="dataEntrada">Data de Entrada:</label>
+            <input type="date" id="dataEntrada" name="dataEntrada" required>
+
+            <label for="dataSaida">Data de Saída:</label>
+            <input type="date" id="dataSaida" name="dataSaida" required>
+
+            <button onclick="submitForm()">Confirmar Reserva</button>
+        </form>
+
+        <div id="crudTable" style="display: none;">
+            <h2>Suas Reservas</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Apartamento</th>
+                        <th>Número de Hóspedes</th>
+                        <th>Data de Entrada</th>
+                        <th>Data de Saída</th>
+                        <th>Alterar Reserva</th>
+                        <th>Remover Reserva</th>
+                    </tr>
+                </thead>
+                <tbody id="reservaTableBody">
+                    <!-- As reservas serão adicionadas aqui dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>Editar Reserva</h2>
+                <label for="editNumHospedes">Número de Hóspedes:</label>
+                <input type="number" id="editNumHospedes" name="editNumHospedes" required>
+
+                <label for="editDataEntrada">Data de Entrada:</label>
+                <input type="date" id="editDataEntrada" name="editDataEntrada" required>
+
+                <label for="editDataSaida">Data de Saída:</label>
+                <input type="date" id="editDataSaida" name="editDataSaida" required>
+
+                <button id="saveEditBtn" onclick="submitEditForm()">Salvar Edições</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            closeEditModal();
+            displayCrudTable();
+
+            window.reservas = [];
+        });
+
+        function openEditModal() {
+            const modalElement = document.getElementById('editModal');
+            console.log('Elemento do Modal:', modalElement);
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const apartamento = urlParams.get('apartamento');
+        document.getElementById('apartamento').value = apartamento;
+
+        async function submitForm() {
+            event.preventDefault();
+            const numHospedes = document.getElementById('numHospedes').value;
+            const dataEntrada = document.getElementById('dataEntrada').value;
+            const dataSaida = document.getElementById('dataSaida').value;
+
+            if (!numHospedes || !dataEntrada || !dataSaida) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const reservaData = {
+                apartamento,
+                numHospedes,
+                dataEntrada,
+                dataSaida
+            };
+
+            const response = await fetch('http://localhost:3000/reservas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'secret-token'
+                },
+                body: JSON.stringify(reservaData)
+            });
+
+            window.reservas = await response.json();
+            alert(result.message);
+
+            if (response.status === 201) {
+                // Se a reserva foi criada com sucesso, exibe a tabela CRUD
+                displayCrudTable();
+            }
+        }
+
+        async function displayCrudTable() {
+            const response = await fetch('http://localhost:3000/reservas', {
+                headers: {
+                    'Authorization': 'secret-token'
+                }
+            });
+
+            window.reservas = await response.json();
+
+            const reservaTableBody = document.getElementById('reservaTableBody');
+            reservaTableBody.innerHTML = '';
+
+            window.reservas.forEach(reserva => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${reserva.id}</td>
+                    <td>${reserva.apartamento}</td>
+                    <td>${reserva.numHospedes}</td>
+                    <td>${reserva.dataEntrada}</td>
+                    <td>${reserva.dataSaida}</td>
+                    <td><button onclick="editReservation(${reserva.id})">Editar</button></td>
+                    <td><button style="background-color: #FF5733;" onclick="deleteReservation(${reserva.id})">Excluir</button></td>
+              `;
+                reservaTableBody.appendChild(row);
+            });
+
+            // Exibe a tabela CRUD
+            document.getElementById('crudTable').style.display = 'block';
+        }
+
+        let editingReservaId = null;
+
+        function editReservation(reservaId) {
+            // Abre o modal de edição
+            openEditModal();
+
+            // Encontra a reserva pelo ID
+            const reserva = window.reservas.find(r => r.id === reservaId);
+
+            // Verifica se a reserva foi encontrada
+            if (!reserva) {
+                console.error('Reserva não encontrada para o ID:', reservaId);
+                return;
+            }
+
+            // Preenche os campos do modal com os dados da reserva
+            document.getElementById('editNumHospedes').value = reserva.numHospedes || '';
+            document.getElementById('editDataEntrada').value = reserva.dataEntrada || '';
+            document.getElementById('editDataSaida').value = reserva.dataSaida || '';
+
+            // Configura o botão de salvar no modal para chamar a função de atualização
+            document.getElementById('saveEditBtn').onclick = () => submitEditForm(reservaId);
+        }
+
+
+
+        async function submitForm() {
+            event.preventDefault();
+            const numHospedes = document.getElementById('numHospedes').value;
+            const dataEntrada = document.getElementById('dataEntrada').value;
+            const dataSaida = document.getElementById('dataSaida').value;
+
+            if (!numHospedes || !dataEntrada || !dataSaida) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            const reservaData = {
+                apartamento,
+                numHospedes,
+                dataEntrada,
+                dataSaida
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/reservas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'secret-token'
+                    },
+                    body: JSON.stringify(reservaData)
+                });
+
+                if (response.status === 201) {
+                    // Se a reserva foi criada com sucesso, exibe a tabela CRUD
+                    displayCrudTable();
+                } else {
+                    alert('Erro ao criar a reserva. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Erro na conexão. Verifique sua conexão de rede e tente novamente.');
+            }
+        }
+
+        async function submitEditForm(reservaId) {
+            const numHospedes = document.getElementById('editNumHospedes').value;
+            const dataEntrada = document.getElementById('editDataEntrada').value;
+            const dataSaida = document.getElementById('editDataSaida').value;
+
+            // Valide os campos, se necessário
+            if (!numHospedes || !dataEntrada || !dataSaida) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            // Construa o objeto com os dados editados
+            const editedReservaData = {
+                numHospedes,
+                dataEntrada,
+                dataSaida
+            };
+
+            // Envia dados editados ao backend
+            const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'secret-token'
+                },
+                body: JSON.stringify(editedReservaData)
+            });
+
+            if (response.status === 200) {
+                // Fechar o modal após salvar as edições
+                closeEditModal();
+
+                // Atualizar a tabela CRUD após editar a reserva
+                displayCrudTable();
+            } else {
+                alert('Erro ao salvar as edições da reserva. Tente novamente.');
+            }
+        }
+
+        async function deleteReservation(reservaId) {
+            const confirmation = confirm('Tem certeza que deseja excluir esta reserva?');
+
+            if (confirmation) {
+                try {
+                    const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'secret-token'
+                        }
+                    });
+
+                    if (response.status === 200) {
+                        alert('Reserva excluída com sucesso!');
+                        // Atualize a tabela CRUD após excluir a reserva
+                        displayCrudTable();
+                    } else {
+                        alert('Erro ao excluir a reserva. Tente novamente.');
+                    }
+                } catch (error) {
+                    console.error('Erro na requisição:', error);
+                    alert('Erro na conexão. Verifique sua conexão de rede e tente novamente.');
+                }
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

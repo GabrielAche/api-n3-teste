@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../css/styleHome.css">
+</head>
+
+<body>
+    <main class="card">
+        <div class="title">
+            <h2> Apartamentos disponiveis</h2>
+        </div>
+
+        <div class="container_1">
+            <!-- Apartamento 1 -->
+            <div class="box" onclick="alugarApartamento(1)">
+                <label>Apartamento 1</label>
+                <img src="../images/ap1.webp" alt="Apartamento 1">
+                <button>Alugar</button>
+            </div>
+
+            <!-- Apartamento 2 -->
+            <div class="box" onclick="alugarApartamento(2)">
+                <label>Apartamento 2</label>
+                <img src="../images/ap2.jpg" alt="Apartamento 2">
+                <button>Alugar</button>
+            </div>
+        </div>
+
+        <div class="container_2">
+            <!-- Apartamento 3 -->
+            <div class="box" onclick="alugarApartamento(3)">
+                <label>Apartamento 3</label>
+                <img src="../images/ap3.webp" alt="Apartamento 3">
+                <button>Alugar</button>
+            </div>
+
+            <!-- Apartamento 4 -->
+            <div class="box" onclick="alugarApartamento(4)">
+                <label>Apartamento 4</label>
+                <img src="../images/ap4.webp" alt="Apartamento 4">
+                <button>Alugar</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function alugarApartamento(apartamento) {
+            window.location.href = `./reserva.html?apartamento=${apartamento}`;
+        }
+    </script>
+
+</body>
+
+</html>
