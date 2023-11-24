@@ -76,6 +76,29 @@ app.post('/reservas', async (req, res) => {
     res.status(201).json({ message: 'Reserva criada com sucesso!', reserva });
 });
 
+app.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    try {
+        const user = await User.findOne({
+            where: {
+                email,
+                senha
+            }
+        });
+
+        if (user) {
+            // Usuário encontrado, retorna um token ou uma resposta de sucesso
+            res.status(200).json({ message: 'Login bem-sucedido' });
+        } else {
+            // Usuário não encontrado, retorna uma resposta de erro
+            res.status(401).json({ message: 'Credenciais inválidas' });
+        }
+    } catch (error) {
+        console.error('Erro no login:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
+});
 
 // PUT endpoint
 app.put('/users/:userId', async (req, res) => {

@@ -125,3 +125,12 @@ div h2{
     text-shadow: -1px -1px 0px black, -4px -4px 0px black;
     text-align: center;
 }
+
+::-webkit-scrollbar{ /* scroll da tela*/
+    width: 10px;
+    background-color: #1f165f;
+}
+
+::-webkit-scrollbar-thumb{ /* barra do scroll da tela*/
+    background-color: #100d2d;
+}
